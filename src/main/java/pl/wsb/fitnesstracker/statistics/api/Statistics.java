@@ -19,9 +19,6 @@ public class Statistics {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Nullable
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @OneToOne
     @JoinColumn(name = "user_id", nullable = false, unique = true)
