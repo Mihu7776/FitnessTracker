@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import pl.wsb.fitnesstracker.user.api.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,11 +25,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     }
 
     /**
-     * Native SQL (Zadanie 4): users by email domain, e.g. "@gmail.com"
+     * Native SQL: users by email domain, e.g. "@gmail.com"
      */
     @Query(
             value = "SELECT * FROM users u WHERE u.email LIKE CONCAT('%', :domain)",
             nativeQuery = true
     )
     List<User> findByEmailDomain(@Param("domain") String domain);
+
+    /**
+     * Finds users born before given date.
+     */
+    List<User> findByBirthdateBefore(LocalDate date);
 }
