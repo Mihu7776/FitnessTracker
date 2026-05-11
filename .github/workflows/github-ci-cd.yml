@@ -1,14 +1,3 @@
-# GitHub Actions CI/CD pipeline for a Java project using Maven
-# File path should be: .github/workflows/github-ci-cd.yml
-#
-# Testy podzielone są na stage'e zgodnie z laboratoriami:
-#   - lab02            -> DatabaseSchemaTest       (encje z LAB02)
-#   - lab03-entities   -> Lab03EntitiesTest        (encje z LAB03, STAGE 1)
-#
-# Stage'e testowe są niezależne (brak `needs:` między nimi), więc niepowodzenie
-# jednego nie przerywa pozostałych — widzisz pełny obraz, które laboratorium
-# już zielenie się, a które jeszcze nie. Job `package` buduje JAR tylko,
-# gdy wszystkie stage'e są zielone.
 name: Java CI with Maven
 
 permissions:
@@ -24,6 +13,7 @@ jobs:
   lab02:
     name: LAB02 — schema (DatabaseSchemaTest)
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -50,6 +40,7 @@ jobs:
   lab03-entities:
     name: LAB03-1 — entities (Lab03EntitiesTest)
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -77,6 +68,7 @@ jobs:
     name: Package JAR
     runs-on: ubuntu-latest
     needs: [ lab02, lab03-entities ]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -99,3 +91,23 @@ jobs:
           path: target/*.jar
           if-no-files-found: ignore
           retention-days: 7
+
+  qodana-config:
+    name: Qodana Configuration Upload
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Run Qodana Configuration Uploader
+        env:
+          QODANA_CONFIGURATIONS_TOKEN: ${{ secrets.QODANA_CONFIGURATIONS_TOKEN }}
+        run: |
+          docker run --rm \
+            -v $(pwd):/workspace \
+            -w /workspace \
+            -e QODANA_CONFIGURATIONS_TOKEN=$QODANA_CONFIGURATIONS_TOKEN \
+            jetbrains/qodana-configuration-uploader:latest \
+            --global-configs-file qodana-global-configurations.yaml \
+            --qodana-host https://qodana.cloud
