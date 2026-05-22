@@ -30,9 +30,9 @@ class UserMapper {
     UserDto toUserEmailDto(User user) {
         return new UserDto(
                 user.getId(),
-                null,
-                null,
-                null,
+                user.getFirstName(),
+                user.getLastName(),
+                user.getBirthdate(),
                 user.getEmail()
         );
     }
