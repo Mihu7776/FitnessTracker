@@ -47,8 +47,9 @@ class InitialDataLoader {
         List<User> sampleUserList = generateSampleUsers();
         List<Training> sampleTrainingList = generateTrainingData(sampleUserList);
 
-
-        log.info("Finished loading initial data");
+        log.info("Finished loading initial data: {} users and {} trainings",
+                sampleUserList.size(),
+                sampleTrainingList.size());
     }
 
     private User generateUser(String name, String lastName, int age) {
@@ -156,7 +157,7 @@ class InitialDataLoader {
 
             trainingRepository.saveAll(trainingData);
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.error("Could not parse sample training date", e);
         }
 
         return trainingData;

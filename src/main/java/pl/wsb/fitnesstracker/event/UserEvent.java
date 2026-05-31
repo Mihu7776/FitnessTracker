@@ -3,10 +3,10 @@ package pl.wsb.fitnesstracker.event;
 import jakarta.persistence.*;
 import pl.wsb.fitnesstracker.user.api.User;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "User_Event")
+@Table(name = "user_event")
 public class UserEvent {
 
     @Id
@@ -21,12 +21,24 @@ public class UserEvent {
     @JoinColumn(name = "event_id", nullable = false)
     private Event event;
 
-    @Column(nullable = false)
-    private LocalDateTime registrationDate;
+    @Column(name = "registration_date", nullable = false)
+    private LocalDate registrationDate;
 
     private String status;
 
-    public UserEvent() {}
+    public UserEvent() {
+    }
+
+    public UserEvent(User user, Event event) {
+        this(user, event, LocalDate.now());
+    }
+
+    public UserEvent(User user, Event event, LocalDate registrationDate) {
+        this.user = user;
+        this.event = event;
+        this.registrationDate = registrationDate;
+        this.status = "REGISTERED";
+    }
 
     public Long getId() {
         return id;
@@ -48,11 +60,11 @@ public class UserEvent {
         this.event = event;
     }
 
-    public LocalDateTime getRegistrationDate() {
+    public LocalDate getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(LocalDateTime registrationDate) {
+    public void setRegistrationDate(LocalDate registrationDate) {
         this.registrationDate = registrationDate;
     }
 

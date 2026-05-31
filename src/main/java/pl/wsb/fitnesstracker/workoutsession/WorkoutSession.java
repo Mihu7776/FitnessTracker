@@ -6,7 +6,7 @@ import pl.wsb.fitnesstracker.training.api.Training;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Workout_Session")
+@Table(name = "workout_session")
 public class WorkoutSession {
 
     @Id
@@ -26,7 +26,26 @@ public class WorkoutSession {
     private double endLongitude;
     private double altitude;
 
-    public WorkoutSession() {}
+    public WorkoutSession() {
+    }
+
+    public WorkoutSession(
+            Training training,
+            LocalDateTime timestamp,
+            double startLatitude,
+            double startLongitude,
+            double endLatitude,
+            double endLongitude,
+            double altitude
+    ) {
+        this.training = training;
+        this.timestamp = timestamp;
+        this.startLatitude = startLatitude;
+        this.startLongitude = startLongitude;
+        this.endLatitude = endLatitude;
+        this.endLongitude = endLongitude;
+        this.altitude = altitude;
+    }
 
     public Long getId() {
         return id;

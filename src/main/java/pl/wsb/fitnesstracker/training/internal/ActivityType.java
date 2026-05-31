@@ -1,13 +1,15 @@
 package pl.wsb.fitnesstracker.training.internal;
 
-// TODO : JavaDoc
+/**
+ * Supported workout activity types.
+ */
 public enum ActivityType {
 
     RUNNING("Running"),
     CYCLING("Cycling"),
     WALKING("Walking"),
     SWIMMING("Swimming"),
-    TENNIS("Tenis");
+    TENNIS("Tennis");
 
     private final String displayName;
 

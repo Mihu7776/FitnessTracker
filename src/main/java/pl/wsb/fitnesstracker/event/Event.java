@@ -1,20 +1,33 @@
 package pl.wsb.fitnesstracker.event;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 
 @Entity
+@Table(name = "event")
 public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    private LocalDateTime startTime;
+    @Column(name = "start_date", nullable = false)
+    private LocalDate startDate;
+
+    @Column(nullable = false)
+    private String location;
 
     public Event() {
+    }
+
+    public Event(String name, LocalDate startDate, String location) {
+        this.name = name;
+        this.startDate = startDate;
+        this.location = location;
     }
 
     public Long getId() {
@@ -25,8 +38,12 @@ public class Event {
         return name;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public String getLocation() {
+        return location;
     }
 
     public void setId(Long id) {
@@ -37,7 +54,11 @@ public class Event {
         this.name = name;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

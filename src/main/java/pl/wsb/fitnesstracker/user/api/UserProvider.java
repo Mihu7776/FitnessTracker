@@ -24,6 +24,14 @@ public interface UserProvider {
     Optional<User> getUserByEmail(String email);
 
     /**
+     * Retrieves users whose email contains given phrase.
+     *
+     * @param email email phrase
+     * @return list of matching users
+     */
+    List<User> findUsersByEmailContaining(String email);
+
+    /**
      * Retrieves all users.
      *
      * @return list of users

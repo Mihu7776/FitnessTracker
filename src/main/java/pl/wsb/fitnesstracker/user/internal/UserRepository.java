@@ -7,7 +7,6 @@ import pl.wsb.fitnesstracker.user.api.User;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -18,11 +17,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param email email of the user to search
      * @return Optional containing found user or Optional.empty() if none matched
      */
-    default Optional<User> findByEmail(String email) {
-        return findAll().stream()
-                .filter(user -> Objects.equals(user.getEmail(), email))
-                .findFirst();
-    }
+    Optional<User> findByEmail(String email);
+
+    /**
+     * Finds users whose e-mail contains the provided text, ignoring case.
+     */
+    List<User> findByEmailContainingIgnoreCase(String email);
 
     /**
      * Native SQL: users by email domain, e.g. "@gmail.com"

@@ -3,12 +3,15 @@ package pl.wsb.fitnesstracker.user.internal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import pl.wsb.fitnesstracker.exception.api.BusinessException;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserDto;
+import pl.wsb.fitnesstracker.user.api.UserEmailDto;
+import pl.wsb.fitnesstracker.user.api.UserNotFoundException;
 import pl.wsb.fitnesstracker.user.api.UserProvider;
 import pl.wsb.fitnesstracker.user.api.UserService;
+import pl.wsb.fitnesstracker.user.api.UserSimpleDto;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -44,7 +47,7 @@ class UserController {
     }
 
     @GetMapping("/simple")
-    public List<UserDto> getSimple() {
+    public List<UserSimpleDto> getSimple() {
 
         return userProvider.findAllUsers()
                 .stream()
@@ -57,17 +60,18 @@ class UserController {
 
         return userProvider.getUser(id)
                 .map(userMapper::toUserDto)
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 
     @GetMapping("/email")
-    public List<UserDto> getByEmail(@RequestParam String email) {
+    public List<UserEmailDto> getByEmail(@RequestParam String email) {
 
-        return userProvider.findAllUsers()
+        if (email.isBlank()) {
+            throw new BusinessException("Email search phrase must not be blank");
+        }
+
+        return userProvider.findUsersByEmailContaining(email.trim())
                 .stream()
-                .filter(user ->
-                        user.getEmail().toLowerCase()
-                                .contains(email.toLowerCase()))
                 .map(userMapper::toUserEmailDto)
                 .toList();
     }
@@ -75,11 +79,8 @@ class UserController {
     @GetMapping("/older/{time}")
     public List<UserDto> getOlderThan(@PathVariable String time) {
 
-        LocalDate date = LocalDate.parse(time);
-
-        return userProvider.findAllUsers()
+        return userProvider.findUsersOlderThan(time)
                 .stream()
-                .filter(user -> user.getBirthdate().isBefore(date))
                 .map(userMapper::toUserDto)
                 .toList();
     }
